@@ -1,0 +1,13 @@
+kafka:
+  bootStrapServers: "localhost:9092"
+  groupId: "my-group"
+  autoOffsetReset: "earliest"
+
+redis:
+  addr: "localhost:6379"
+  db: 0
+  pwd: ""
+
+scylla:
+  hosts: "localhost"
+  keyspace: "notificationservice"
