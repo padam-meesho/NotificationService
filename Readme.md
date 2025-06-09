@@ -2,7 +2,7 @@
 
 A scalable Go-based SMS notification service built with microservices architecture, featuring asynchronous message processing using Kafka, data persistence with ScyllaDB, and Redis-based blacklisting.
 
-##  Architecture
+## Architecture
 
 - **API Layer**: Gin HTTP framework with middleware for authentication and request tracing
 - **Message Queue**: Kafka for asynchronous SMS processing
@@ -10,7 +10,7 @@ A scalable Go-based SMS notification service built with microservices architectu
 - **Cache**: Redis for phone number blacklisting
 - **Containerization**: Docker Compose for easy deployment
 
-##  Features
+## Features
 
 - **SMS Management**: Send, track, and retrieve SMS request details
 - **Blacklist Management**: Add/remove phone numbers from blacklist
@@ -19,13 +19,13 @@ A scalable Go-based SMS notification service built with microservices architectu
 - **Authentication**: Bearer token-based API security
 - **Health Checks**: Service health monitoring endpoints
 
-##  Prerequisites
+## Prerequisites
 
 - Go 1.24+ 
 - Docker & Docker Compose
 - Git
 
-## 🛠️ Setup Instructions
+## Setup Instructions
 
 ### 1. Clone the Repository
 ```bash
@@ -97,7 +97,7 @@ go run cmd/main.go
 
 The service will start on `http://localhost:3333`
 
-## 📡 API Endpoints
+## API Endpoints
 
 ### Authentication
 All endpoints require `Authorization: Bearer password123` header.
@@ -183,7 +183,7 @@ docker logs kafka
 # Monitor consumer logs in application output
 ```
 
-##  Development
+## Development
 
 ### Project Structure
 ```
@@ -207,7 +207,7 @@ docker logs kafka
 4. Add HTTP handlers in `internal/handlers/`
 5. Register routes in `internal/routes/`
 
-##  Troubleshooting
+## Troubleshooting
 
 ### Common Issues
 
@@ -232,7 +232,7 @@ docker logs kafka
 - Kafka consumer logs show message processing status
 - Database operation results are logged with request IDs
 
-##  Contributing
+## Contributing
 
 1. Fork the repository
 2. Create a feature branch
