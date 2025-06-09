@@ -115,6 +115,10 @@ func (notificationServiceInstance *NotificationServiceMethodsImpl) HandleKafkaMe
 			Str("request_id", requestId).
 			Str("phone_number", smsDetails.PhoneNumber).
 			Msg("SMS blocked - phone number is blacklisted")
+		// here we have to update the db with failure
+		smsDetails.FailureComments = "Number is blacklisted"
+		smsDetails.FailureCode = "400"
+		smsDetails.Status = "Failure"
 		return nil
 	}
 
@@ -124,6 +128,9 @@ func (notificationServiceInstance *NotificationServiceMethodsImpl) HandleKafkaMe
 		Str("phone_number", smsDetails.PhoneNumber).
 		Msg("Sending SMS to external service")
 	notificationServiceInstance.SendMessage(smsDetails)
+
+	// message is sent so we update the status
+	smsDetails.Status = "Success"
 
 	err = notificationServiceInstance.scyllaDao.UpdateSMSDetailsInDB(ctx, smsDetails)
 	if err != nil {
@@ -196,6 +203,25 @@ func (notificationServiceInstance *NotificationServiceMethodsImpl) GetBlacklistS
 		Int("count", len(blacklistedNumbers)).
 		Msg("Successfully retrieved blacklisted numbers")
 	return blacklistedNumbers, nil
+}
+
+func (notificationServiceInstance *NotificationServiceMethodsImpl) CheckInBlacklistService(ctx context.Context, number string) (bool, error) {
+	logger := utils.RequestLogger(ctx, "service", "get_blacklist")
+
+	logger.Info().Msg("Verifying number in blacklisted numbers")
+
+	isPresent, err := notificationServiceInstance.redisDao.CheckNumberInBlacklistedSet(ctx, number)
+	if err != nil {
+		logger.Error().
+			Err(err).
+			Msg("Failed to retrieve blacklisted numbers")
+		return false, fmt.Errorf("failed to retrieve blacklisted numbers")
+	}
+
+	logger.Info().
+		Bool("Status", isPresent).
+		Msg("Successfully verified in blacklisted numbers")
+	return isPresent, nil
 }
 
 func (notificationServiceInstance *NotificationServiceMethodsImpl) AddToBlacklistService(ctx context.Context, req models.AddToBlacklist) error {
