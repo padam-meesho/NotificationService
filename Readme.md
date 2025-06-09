@@ -29,7 +29,7 @@ A scalable Go-based SMS notification service built with microservices architectu
 
 ### 1. Clone the Repository
 ```bash
-git clone <your-repo-url>
+git clone https://github.com/padam-meesho/NotificationService/
 cd NotificationService
 ```
 
