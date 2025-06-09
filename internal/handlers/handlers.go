@@ -28,6 +28,21 @@ func SendSmsController(c *gin.Context) {
 	}
 	serviceInstance := repo.GetNotificationServiceInstance()
 	// now since the validation is done, call the service.
+	// call the repo blacklisted method to check before pushing this.
+
+	isPresent, err := serviceInstance.CheckInBlacklistService(c, req.PhoneNumber)
+
+	if err != nil {
+		c.JSON(400, gin.H{"ERROR": err})
+		return
+	}
+
+	if isPresent {
+		logger.Info().Msg("Number is blacklisted, cannot sent SMS")
+		c.JSON(400, gin.H{"message": "Sorry, number is blacklisted, cannot sent SMS!"})
+		return
+	}
+
 	reqId, err := serviceInstance.SendSMSService(c, req)
 	if err != nil {
 		c.JSON(400, gin.H{"ERROR": err})
